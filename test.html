@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<head>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<title>Hello, world!</title>
+	<!-- include three.js library -->
+	<script src='js/three.js'></script>
+	<script src='js/OBJLoader.js'></script>
+	<script src='js/MTLLoader.js'></script>
+	<!-- include jsartookit -->
+	<script src="jsartoolkit5/artoolkit.min.js"></script>
+	<script src="jsartoolkit5/artoolkit.api.js"></script>
+	<!-- include threex.artoolkit -->
+	<script src="threex/threex-artoolkitsource.js"></script>
+	<script src="threex/threex-artoolkitcontext.js"></script>
+	<script src="threex/threex-arbasecontrols.js"></script>
+	<script src="threex/threex-armarkercontrols.js"></script>
+</head>
+
+<style>
+    .button {
+      background-color: rgb(94, 18, 194); /* Green */
+      border: none;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+    
+    .button1 {border-radius: 2px;}
+    .button2 {border-radius: 4px;}
+    .button3 {border-radius: 8px;}
+    .button4 {border-radius: 12px; border: 2px solid #fffaf9;}
+    .button6 {border-radius: 12px; border: 2px solid #000000; background-color: white; color : black; /* Green */}
+    .button5 {border-radius: 50%;}
+    </style>
+
+<body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
+    
+    <div class="botones" >
+        <button class="button button4" onclick="venus()">Venus</button>
+        <button class="button button4" onclick="earth()">Tierra</button>
+        <button class="button button4" onclick="tierra()">Luna</button>
+        <button class="button button6" onclick="borrar2()">Borrar</button>
+        
+    </div>
+    <div id="prueba">
+
+    </div>
+<script>
+    var scene, camera, renderer, clock, deltaTime, totalTime;
+    var cont = 0;
+
+var arToolkitSource, arToolkitContext;
+
+var markerRoot1;
+    iniciar();
+
+    var id = null;
+    function start() {
+        if (id !== null) 
+            cancelAnimationFrame(id)   
+    }
+    function borrar2()
+    {
+        scene.remove.apply(scene, scene.children);
+        var element = document.getElementsByTagName("video"), index;
+
+        for (index = element.length - 1; index > 0; index--) {
+            element[index].parentNode.removeChild(element[index]);
+        }
+
+        element = document.getElementsByTagName("canvas"), index;
+
+        for (index = element.length - 1; index > 0; index--) {
+            element[index].parentNode.removeChild(element[index]);
+        }
+        start();
+    }
+    function borrar()
+    {
+        scene.remove.apply(scene, scene.children);
+        renderer = null;
+        camera = null;
+    }
+    function venus()
+    {
+        start();
+        borrar2();
+        iniciar();
+        markerRoot1 = new THREE.Group();
+        scene.add(markerRoot1);
+        let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoot1, {
+            type: 'pattern', patternUrl: "data/hiro.patt",
+        })
+        function onProgress(xhr) { console.log( (xhr.loaded / xhr.total * 100) + '% loaded' ); }
+	    function onError(xhr) { console.log( 'An error happened' ); }
+        new THREE.MTLLoader()
+		.setPath( 'models/' )
+		.load( 'venus.mtl', function ( materials ) {
+			materials.preload();
+			new THREE.OBJLoader()
+				.setMaterials( materials )
+				.setPath( 'models/' )
+				.load( 'venus.obj', function ( group ) {
+					mesh0 = group.children[0];
+					mesh0.material.side = THREE.DoubleSide;
+					mesh0.position.y = 0.25;
+					mesh0.scale.set(1,1,1);
+					markerRoot1.add(mesh0);
+				}, onProgress, onError );
+        });
+        animate();
+    }
+
+    function tierra()
+    {
+        start();
+        borrar2();
+        iniciar();
+        markerRoot1 = new THREE.Group();
+        scene.add(markerRoot1);
+        let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoot1, {
+            type: 'pattern', patternUrl: "data/hiro.patt",
+        })
+        function onProgress(xhr) { console.log( (xhr.loaded / xhr.total * 100) + '% loaded' ); }
+	    function onError(xhr) { console.log( 'An error happened' ); }
+        new THREE.MTLLoader()
+		.setPath( 'models/' )
+		.load( 'luna.mtl', function ( materials ) {
+			materials.preload();
+			new THREE.OBJLoader()
+				.setMaterials( materials )
+				.setPath( 'models/' )
+				.load( 'luna.obj', function ( group ) {
+					mesh0 = group.children[0];
+					mesh0.material.side = THREE.DoubleSide;
+					mesh0.position.y = 0.25;
+					mesh0.scale.set(0.23,0.23,0.23);
+					markerRoot1.add(mesh0);
+				}, onProgress, onError );
+        });
+        animate();
+    }
+
+    function earth()
+    {
+        start();
+        borrar2();
+        iniciar();
+        markerRoot1 = new THREE.Group();
+        scene.add(markerRoot1);
+        let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoot1, {
+            type: 'pattern', patternUrl: "data/hiro.patt",
+        })
+        function onProgress(xhr) { console.log( (xhr.loaded / xhr.total * 100) + '% loaded' ); }
+	    function onError(xhr) { console.log( 'An error happened' ); }
+        new THREE.MTLLoader()
+		.setPath( 'models/' )
+		.load( 'tierra.mtl', function ( materials ) {
+			materials.preload();
+			new THREE.OBJLoader()
+				.setMaterials( materials )
+				.setPath( 'models/' )
+				.load( 'tierra.obj', function ( group ) {
+					mesh0 = group.children[0];
+					mesh0.material.side = THREE.DoubleSide;
+					mesh0.position.y = 0.25;
+					mesh0.scale.set(0.3,0.3,0.3);
+					markerRoot1.add(mesh0);
+				}, onProgress, onError );
+        });
+        animate();
+    }
+
+
+    function iniciar()
+    {
+        scene = new THREE.Scene();
+        camera = new THREE.Camera();
+        let ambientLight = new THREE.AmbientLight( 0xcccccc, 1.0 );
+	scene.add( ambientLight );
+        scene.add(camera);
+        renderer = new THREE.WebGLRenderer({
+            antialias : true,
+            alpha : true
+        });
+        renderer.setClearColor(new THREE.Color('lightgrey'), 0)
+        renderer.setSize(640,480);
+        renderer.domElement.style.position = 'absolute'
+        renderer.domElement.style.top = '65px'
+        renderer.domElement.style.left = '0px'
+        document.getElementById("prueba").appendChild(renderer.domElement); 
+        clock = new THREE.Clock();
+        deltaTime = 0;
+        totalTime = 0;
+
+        arToolkitSource = new THREEx.ArToolkitSource({
+            sourceType : 'webcam',
+        });
+
+        function onResize()
+        {
+            arToolkitSource.onResize()	
+            arToolkitSource.copySizeTo(renderer.domElement)	
+            if ( arToolkitContext.arController !== null )
+            {
+                arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)	
+            }	
+        }
+
+        arToolkitSource.init(function onReady(){
+            onResize()
+        });
+        
+        window.addEventListener('resize', function(){
+            onResize()
+        });
+
+        arToolkitContext = new THREEx.ArToolkitContext({
+            cameraParametersUrl : 'data/camera_para.dat',
+            detectionMode : 'mono'
+        });
+
+        arToolkitContext.init( function onCompleted(){
+		    camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
+	    });
+
+        
+    }
+
+    function update()
+{
+    
+	if ( markerRoot1.visible )
+    {
+		mesh0.rotation.y += 0.01 ;
+    }
+	// update artoolkit on every frame
+	if ( arToolkitSource.ready !== false )
+		arToolkitContext.update( arToolkitSource.domElement );
+    
+}
+
+
+function render()
+{
+	renderer.render( scene, camera );
+}
+
+
+function animate()
+{
+    id = requestAnimationFrame( animate );
+	deltaTime = clock.getDelta();
+	totalTime += deltaTime;
+	update();
+	render();
+}
+        
+</script>
+</body>
