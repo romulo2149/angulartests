@@ -16,3 +16,11 @@ app.controller('testCtrl', function ($scope){
             }
         }
     });
+
+app.controller('restCtrl', function ($scope, $http) {
+    $http.get("https://jsonplaceholder.typicode.com/todos/1")
+    .then(function(response){
+        $scope.hola = response.data;
+    })
+    .catch(function (err) { $scope.hola = err;});;
+});
